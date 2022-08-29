@@ -39,6 +39,9 @@ const Cart = (props) => {
           </div>
         </div>
       </div>
+      <div className={classes.checkout}>
+        {quantity > 0 ? <button>Proceed to checkout</button> : ''}
+      </div>
     </Modal>
   );
 };

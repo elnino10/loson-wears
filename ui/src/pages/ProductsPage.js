@@ -9,14 +9,13 @@ const ProductsPage = (props) => {
   const item = useSelector((state) => state.productDetail.product);
   const loading = useSelector((state) => state.productDetail.loading);
   const error = useSelector((state) => state.productDetail.error);
+  const picked = useSelector((state) => state.cart.itemPicked);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(productDetailAsync(params.productId));
     return () => {};
   }, [dispatch, params.productId]);
-
-  const changeHandler = () => {};
 
   const AddToCartHandler = () => {
     const itemQuantity = qtyRef.current.value;
@@ -62,10 +61,12 @@ const ProductsPage = (props) => {
           <div className="details-action">
             <ul>
               <li>Price: {item.price} ngn</li>
-              <li>Status: {item.qtyInStock > 0 ? "In Stock" : "Unavailable"}</li>
+              <li>
+                Status: {item.qtyInStock > 0 ? "In Stock" : "Unavailable"}
+              </li>
               <li>
                 Qty:{" "}
-                <select ref={qtyRef} onChange={changeHandler}>
+                <select ref={qtyRef} disabled={picked ? true : false}>
                   {[...Array(item.qtyInStock).keys()].map((x) => (
                     <option key={item.id + `q${x + 1}`} value={x + 1}>
                       {x + 1}
@@ -73,11 +74,17 @@ const ProductsPage = (props) => {
                   ))}
                 </select>
               </li>
-              <li>
-                {item.qtyInStock > 0 && <button className="button" onClick={AddToCartHandler}>
-                  Add to Cart
-                </button>}
-              </li>
+              {!picked ? (
+                <li>
+                  {item.qtyInStock > 0 && (
+                    <button className="button" onClick={AddToCartHandler}>
+                      Add to Cart
+                    </button>
+                  )}
+                </li>
+              ) : (
+                <p>{item.name} Added To Cart!</p>
+              )}
             </ul>
           </div>
         </div>

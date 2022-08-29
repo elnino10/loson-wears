@@ -2,7 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import axios from "axios";
 
-const initialState = { product: {}, loading: true, error: null };
+const initialState = {
+  product: {},
+  loading: true,
+  error: null,
+};
 
 const productDetailSlice = createSlice({
   name: "product-detail",
