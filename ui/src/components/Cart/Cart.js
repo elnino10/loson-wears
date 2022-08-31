@@ -4,30 +4,42 @@ import CartItem from "./CartItem";
 import Modal from "../UI/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { hideCart } from "../../store/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 const Cart = (props) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const total = useSelector(state => state.cart.totalAmount)
-  const quantity = useSelector(state => state.cart.totalQuantity)
+  const total = useSelector((state) => state.cart.totalAmount);
+  const quantity = useSelector((state) => state.cart.totalQuantity);
 
   const hideCartHandler = () => {
     dispatch(hideCart());
   };
 
-  let cartHeader = <h3>Your Shopping Cart Items</h3>
+  const checkoutHandler = () => {
+    // if (isSignedIn) {
+    //   navigate('/checkoutPage');
+    // } else {
+    //   navigate("/signInPage");
+    // }
+  };
+
+  let cartHeader = (
+    <h3>{`Your Shopping Cart Item${quantity > 1 ? "s" : ""}`}</h3>
+  );
   if (quantity < 1) {
-    cartHeader = <h3>Shopping Cart is empty</h3>
+    cartHeader = <h3>Shopping Cart is empty</h3>;
   }
 
   return (
     <Modal className={classes.cart}>
       <div className={classes["cart-header"]}>
-        {cartHeader} 
+        {cartHeader}
         <div className={classes["close-cart"]} onClick={hideCartHandler}>
           x
         </div>
       </div>
-      <div className={classes['cart-item']}>
+      <div className={classes["cart-item"]}>
         <ul>
           <CartItem />
         </ul>
@@ -40,7 +52,11 @@ const Cart = (props) => {
         </div>
       </div>
       <div className={classes.checkout}>
-        {quantity > 0 ? <button>Proceed to checkout</button> : ''}
+        {quantity > 0 ? (
+          <button onClick={checkoutHandler}>Proceed to checkout</button>
+        ) : (
+          ""
+        )}
       </div>
     </Modal>
   );

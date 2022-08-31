@@ -7,7 +7,7 @@ const cartSlice = createSlice({
     totalQuantity: 0,
     totalAmount: 0,
     cartIsVisible: false,
-    itemPicked: false,
+    itemPicked: false
   },
   reducers: {
     showCart(state) {
@@ -19,19 +19,14 @@ const cartSlice = createSlice({
     },
 
     addToCart(state, action) {
-      state.itemPicked = true;
       const newItem = action.payload;
-
       const existingItemIndex = state.items.findIndex(
         (item) => item.id === newItem.id
       );
       const existingItem = state.items[existingItemIndex];
-
       const itemQty = parseInt(newItem.quantity);
       state.totalQuantity = state.totalQuantity + itemQty;
       state.totalAmount = state.totalAmount + newItem.price * itemQty;
-      console.log(state.totalQuantity);
-
       if (existingItem) {
         existingItem.quantity = +existingItem.quantity + itemQty;
         existingItem.amount = existingItem.amount + newItem.price * itemQty;
@@ -62,7 +57,6 @@ const cartSlice = createSlice({
       const updatedItem = state.items[itemIndex];
       const itemQty = parseInt(updatedItem.quantity);
       if (itemQty === 1) {
-        state.itemPicked = false;
         state.items = state.items.filter((x) => x.id !== item.id);
         state.totalAmount = state.totalAmount - item.price;
         state.totalQuantity = state.totalQuantity - 1;
@@ -75,12 +69,21 @@ const cartSlice = createSlice({
     },
 
     removeFromCart(state, action) {
-      state.itemPicked = false;
       const item = action.payload;
       state.items = state.items.filter((x) => x.id !== item.id);
       state.totalAmount = state.totalAmount - item.amount;
       state.totalQuantity = state.totalQuantity - +item.quantity;
     },
+    
+    productPicked (state, action) {
+      const itemId = action.payload;
+      const itemIndex = state.items.findIndex(x => x.id === itemId);
+      const existingItem = state.items[itemIndex];
+      if(existingItem) {
+        state.itemPicked = true;
+        state.items = [...state.items, {...existingItem}]
+      }
+    }
   },
 });
 
@@ -91,6 +94,7 @@ export const {
   removeFromCart,
   showCart,
   hideCart,
+  productPicked
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
