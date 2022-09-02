@@ -14,7 +14,8 @@ mongoose.connect(mongodbUrl, {
 })
 .then(() => {
  console.log('db connected.....')
-}, err => {
+})
+.catch(err => {
   console.log(err)
 })
 
@@ -23,7 +24,6 @@ const app = express();
 app.use("/api/users", userRoute);
 
 const { items } = data;
-
 app.get("/api/items/:id", (req, res) => {
   const itemId = req.params["id"];
   const item = items.find((item) => item.id === itemId);
