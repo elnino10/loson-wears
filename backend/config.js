@@ -2,5 +2,6 @@
 // dotenv.config();
 
 export default {
-    MONGODB_URL: process.env.MONGODB_URL || "mongodb://localhost/loson"
+    MONGODB_URL: process.env.MONGODB_URL || "mongodb://localhost/loson",
+    JWT_SECRET: process.env.JWT_SECRET || "somethingsecret"
 }

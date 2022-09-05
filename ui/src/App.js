@@ -1,8 +1,10 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, NavLink } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/ProductsPage";
+import SignInPage from "./pages/SignInPage";
+import RegisterPage from "./pages/RegisterPage";
 import CartButton from "./components/Cart/CartButton";
 import Cart from "./components/Cart/Cart";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +12,7 @@ import { addToCart } from "./store/cartSlice";
 
 function App() {
   const viewCart = useSelector((state) => state.cart.cartIsVisible);
+  const userInfo = useSelector(state => state.user.userInfo)
   const dispatch = useDispatch();
 
   const openMenu = () => {
@@ -34,7 +37,21 @@ function App() {
             <Link to="/">loson stores</Link>
           </div>
           <div className="header-links">
-            <a href="login">Sign-In</a>
+            {userInfo ? (
+              <NavLink
+                to="/profile"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                {userInfo.name}
+              </NavLink>
+            ) : (
+              <NavLink
+                to="/signin"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                Sign-In
+              </NavLink>
+            )}
             <CartButton />
           </div>
         </header>
@@ -52,11 +69,18 @@ function App() {
               <a href="index.html">Men's Wears</a>
             </li>
           </ul>
+          {userInfo && (
+            <div className="signout">
+              <Link to="signout">Logout</Link>
+            </div>
+          )}
         </aside>
         <main className="main">
           <div className="products">
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/signin" element={<SignInPage />} />
+              <Route path="/register" element={<RegisterPage />} />
               <Route
                 path="/products/:productId"
                 element={<ProductsPage onAddItem={AddToCartHandler} />}

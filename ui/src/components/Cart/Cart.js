@@ -11,17 +11,19 @@ const Cart = (props) => {
   const dispatch = useDispatch();
   const total = useSelector((state) => state.cart.totalAmount);
   const quantity = useSelector((state) => state.cart.totalQuantity);
+  const userInfo = useSelector(state => state.user.userInfo)
 
   const hideCartHandler = () => {
     dispatch(hideCart());
   };
 
   const checkoutHandler = () => {
-    // if (isSignedIn) {
-    //   navigate('/checkoutPage');
-    // } else {
-    //   navigate("/signInPage");
-    // }
+    if (userInfo) {
+      navigate('/checkout');
+    } else {
+      navigate("/signin");
+    }
+    dispatch(hideCart());
   };
 
   let cartHeader = (
