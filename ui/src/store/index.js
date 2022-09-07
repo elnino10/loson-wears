@@ -4,6 +4,7 @@ import productDetailReducer from "./productDetailSlice";
 import cartReducer from "./cartSlice";
 import userReducer from "./userSlice";
 import signUpReducer from "./SignUpSlice";
+import createProductReducer from "./createProductSlice";
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     cart: cartReducer,
     user: userReducer,
     signUp: signUpReducer,
+    createProduct: createProductReducer
   },
 });

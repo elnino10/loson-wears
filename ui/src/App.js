@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route, Link, NavLink } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
-import ProductsPage from "./pages/ProductsPage";
+import ProductPage from "./pages/ProductPage";
 import SignInPage from "./pages/SignInPage";
 import RegisterPage from "./pages/RegisterPage";
 import CartButton from "./components/Cart/CartButton";
@@ -83,7 +83,7 @@ function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route
                 path="/products/:productId"
-                element={<ProductsPage onAddItem={AddToCartHandler} />}
+                element={<ProductPage onAddItem={AddToCartHandler} />}
               />
             </Routes>
           </div>

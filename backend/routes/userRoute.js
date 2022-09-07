@@ -24,6 +24,7 @@ router.post("/register", async (req, res) => {
     res.status(401).send({ msg: "Failed to create an account" });
   }
 })
+
 router.post("/signin", async (req, res) => {
   const userSignin = await User.findOne({
     email: req.body.email,
