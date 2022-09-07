@@ -9,7 +9,7 @@ export default {
       brand: "Lucci",
       rating: 4,
       reviews: 17,
-      qtyInStock: 9
+      qtyInStock: 9,
     },
     {
       category: "ladies wears",
@@ -20,7 +20,7 @@ export default {
       brand: "Crystal Vintage",
       rating: 4.5,
       reviews: 8,
-      qtyInStock: 4
+      qtyInStock: 4,
     },
     {
       category: "ladies wears",
@@ -31,7 +31,7 @@ export default {
       brand: "Tiana",
       rating: 5,
       reviews: 12,
-      qtyInStock: 5
+      qtyInStock: 5,
     },
     {
       category: "ladies wears",
@@ -42,7 +42,7 @@ export default {
       brand: "Lucci",
       rating: 4.5,
       reviews: 26,
-      qtyInStock: 13
+      qtyInStock: 13,
     },
     {
       category: "ladies wears",
@@ -53,7 +53,7 @@ export default {
       brand: "Crystal Vintage",
       rating: 5,
       reviews: 12,
-      qtyInStock: 11
+      qtyInStock: 11,
     },
     {
       category: "kids wears",
@@ -64,7 +64,7 @@ export default {
       brand: "Centra",
       rating: 4,
       reviews: 9,
-      qtyInStock: 3
+      qtyInStock: 3,
     },
     {
       category: "kids wears",
@@ -75,7 +75,7 @@ export default {
       brand: "Centra",
       rating: 5,
       reviews: 4,
-      qtyInStock: 4
+      qtyInStock: 4,
     },
     {
       category: "kids wears",
@@ -86,10 +86,10 @@ export default {
       brand: "Vintage",
       rating: 4.5,
       reviews: 7,
-      qtyInStock: 9
+      qtyInStock: 9,
     },
     {
-      category: "Men's wears",
+      category: "Male wears",
       id: "9",
       name: "Yellow Hoodie",
       image: "../images/men/yellow-hoodie.jpg",
@@ -97,10 +97,10 @@ export default {
       brand: "Banna",
       rating: 4.5,
       reviews: 16,
-      qtyInStock: 6
+      qtyInStock: 6,
     },
     {
-      category: "Men's wears",
+      category: "Male wears",
       id: "10",
       name: "Tommy Check Shirt",
       image: "../images/men/tommy-check.jpg",
@@ -108,10 +108,10 @@ export default {
       brand: "Tommy",
       rating: 4,
       reviews: 6,
-      qtyInStock: 5
+      qtyInStock: 5,
     },
     {
-      category: "Men's wears",
+      category: "Male wears",
       id: "11",
       name: "Emporio Armani Cotton Polo",
       image: "../images/men/emporio-tshirt.jpg",
@@ -119,7 +119,7 @@ export default {
       brand: "Emporio Armani",
       rating: 5,
       reviews: 8,
-      qtyInStock: 3
+      qtyInStock: 3,
     },
   ],
 };

@@ -13,6 +13,7 @@ import { addToCart } from "./store/cartSlice";
 
 function App() {
   const viewCart = useSelector((state) => state.cart.cartIsVisible);
+  const signedIn = useSelector(state => state.user.success)
   const userInfo = useSelector(state => state.user.userInfo)
   const dispatch = useDispatch();
 
@@ -38,7 +39,7 @@ function App() {
             <Link to="/">loson stores</Link>
           </div>
           <div className="header-links">
-            {userInfo ? (
+            {signedIn ? (
               <NavLink
                 to="/profile"
                 className={({ isActive }) => (isActive ? "active" : "")}
@@ -70,7 +71,7 @@ function App() {
               <a href="index.html">Men's Wears</a>
             </li>
           </ul>
-          {userInfo && (
+          {signedIn && (
             <div className="signout">
               <Link to="signout">Logout</Link>
             </div>

@@ -6,17 +6,17 @@ import { signin } from "../store/userSlice";
 const SignInPage = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const userInfo = useSelector((state) => state.user.userInfo);
+  const signedIn = useSelector((state) => state.user.success);
   const error = useSelector((state) => state.user.error);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     navigate("/");
-  //   }
-  //   return () => {};
-  // }, [userInfo, navigate]);
+  useEffect(() => {
+    if (signedIn) {
+      navigate("/");
+    }
+    return () => {};
+  }, [signedIn, navigate]);
 
   const emailHandler = (e) => {
     setEmail(e.target.value);
@@ -42,7 +42,7 @@ const SignInPage = (props) => {
             <li>
               <h3>Sign In</h3>
             </li>
-            <li>{error && <div>{error}</div>}</li>
+            <li className="error">{error && <div>{error}</div>}</li>
             <li>
               <label htmlFor="email">Email</label>
               <input

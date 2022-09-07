@@ -5,8 +5,9 @@ import Cookie from "js-cookie";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    userInfo: { email: null, password: null },
+    userInfo: {email: null, password: null},
     loading: false,
+    success: false,
     error: null,
   },
   reducers: {
@@ -16,6 +17,7 @@ const userSlice = createSlice({
 
     signinSuccess(state, action) {
       state.userInfo = action.payload;
+      state.success = true;
     },
 
     signinFail(state, action) {

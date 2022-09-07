@@ -26,21 +26,24 @@ router.post("/register", async (req, res) => {
 })
 
 router.post("/signin", async (req, res) => {
-  const userSignin = await User.findOne({
-    email: req.body.email,
-    password: req.body.password,
-  })
-  if(userSignin){
-    res.send({
-      _id: userSignin.id,
-      name: userSignin.name,
-      email: userSignin.email,
-      isAdmin: userSignin.isAdmin,
-      token: getToken(userSignin),
+  try {
+    const userSignin = await User.findOne({
+      email: req.body.email,
+      password: req.body.password,
     });
-  }else{
-    res.status(401).send({msg: "Invalid email or password"})
+    if (userSignin) {
+      return res.send({
+        _id: userSignin.id,
+        name: userSignin.name,
+        email: userSignin.email,
+        isAdmin: userSignin.isAdmin,
+        token: getToken(userSignin),
+      });
+    }
+  } catch (error) {
+    res.send({message: "Invalid email or password"})
   }
+
 })
 
 router.get("/createadmin", async (req, res) => {

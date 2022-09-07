@@ -118,7 +118,7 @@ const CreateProduct = (props) => {
               >
                 <option value="Ladies Wears">Ladies Wears</option>
                 <option value="Kids Wears">Kids Wears</option>
-                <option value="Men's Wears">Men's Wears</option>
+                <option value="Male Wears">Male Wears</option>
               </select>
             </li>
             <li>
