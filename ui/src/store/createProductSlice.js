@@ -17,11 +17,11 @@ const createProductSlice = createSlice({
   },
 });
 
-export const createProduct = (product) => async (dispatch) => {
+export const createProduct = (product) => async (dispatch, getState) => {
   try {
     dispatch(createProductRequest(product));
     const {
-      userSignin: { userInfo },
+      userInfo: { userInfo },
     } = getState();
     const {data} = await axios.post("/api/items", product, {
       headers: {

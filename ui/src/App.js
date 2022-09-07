@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import SignInPage from "./pages/SignInPage";
 import RegisterPage from "./pages/RegisterPage";
+import CreateProduct from "./pages/CreateProduct";
 import CartButton from "./components/Cart/CartButton";
 import Cart from "./components/Cart/Cart";
 import { useDispatch, useSelector } from "react-redux";
@@ -79,6 +80,7 @@ function App() {
           <div className="products">
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/create_product" element={<CreateProduct />} />
               <Route path="/signin" element={<SignInPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route

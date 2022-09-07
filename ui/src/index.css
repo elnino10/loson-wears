@@ -332,3 +332,12 @@ input {
   justify-content: center;
   align-items: center;
 }
+
+.full-width {
+  width: 100%;
+}
+
+.error {
+  color: red;
+  max-width: fit-content;
+}
