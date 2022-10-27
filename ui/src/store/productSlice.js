@@ -1,16 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const initialState = { products: [], loading: true, error: null };
+const initialState = {
+  products: [],
+  success: false,
+  loading: false,
+  error: null,
+};
 
 const productSlice = createSlice({
-  name: "product",
+  name: "products",
   initialState,
   reducers: {
     productListRequest(state) {
-      state.loading = false;
+      state.loading = true;
     },
     productListSuccess(state, action) {
+      state.success = true;
       state.products = action.payload;
     },
     productListFail(state, action) {
@@ -25,8 +31,9 @@ export const { productListRequest, productListSuccess, productListFail } =
 export const productListAsync = () => async (dispatch) => {
   try {
     dispatch(productListRequest());
-    const { data } = await axios.get("/api/items");
-    dispatch(productListSuccess(data));
+    const { data } = await axios.get("/api/products");
+    const products = data.data.products
+    if(data) dispatch(productListSuccess(products));
   } catch (error) {
     dispatch(productListFail(error.message));
   }

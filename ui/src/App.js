@@ -1,93 +1,65 @@
-import React from "react";
-import { Routes, Route, Link, NavLink } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import SignInPage from "./pages/SignInPage";
 import RegisterPage from "./pages/RegisterPage";
 import CreateProduct from "./pages/CreateProduct";
-import CartButton from "./components/Cart/CartButton";
 import Cart from "./components/Cart/Cart";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "./store/cartSlice";
+import Header from "./components/Header";
+import LogoutPage from "./pages/LogoutPage";
+import WelcomePage from "./pages/WelcomePage";
+import ProfilePage from "./pages/ProfilePage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
+import ReviewsPage from "./pages/ReviewsPage";
 
 function App() {
   const viewCart = useSelector((state) => state.cart.cartIsVisible);
-  const signedIn = useSelector(state => state.user.success)
-  const userInfo = useSelector(state => state.user.userInfo)
   const dispatch = useDispatch();
 
-  const openMenu = () => {
-    document.querySelector(".sidebar").classList.add("open");
+  const AddToCartHandler = (item) => {
+    dispatch(addToCart(item));
+  };
+
+  let toggled = false;
+  const toggleMenu = () => {
+    document.querySelector(".sidebar").classList.toggle("open");
+    if (toggled) {
+      toggled = !toggled;
+    }
   };
 
   const closeMenu = () => {
     document.querySelector(".sidebar").classList.remove("open");
-  };
-
-  const AddToCartHandler = (item) => {
-    dispatch(addToCart(item));
+    toggled = false;
   };
 
   return (
     <>
       {viewCart && <Cart />}
       <div className="container-grid">
-        <header className="header">
-          <div className="brand-name">
-            <button onClick={openMenu}>&#9776;</button>
-            <Link to="/">loson stores</Link>
-          </div>
-          <div className="header-links">
-            {signedIn ? (
-              <NavLink
-                to="/profile"
-                className={({ isActive }) => (isActive ? "active" : "")}
-              >
-                {userInfo.name}
-              </NavLink>
-            ) : (
-              <NavLink
-                to="/signin"
-                className={({ isActive }) => (isActive ? "active" : "")}
-              >
-                Sign-In
-              </NavLink>
-            )}
-            <CartButton />
-          </div>
-        </header>
-        <aside className="sidebar">
-          <h4 className="sidebar-header">Shopping Category</h4>
-          <button onClick={closeMenu}>x</button>
-          <ul className="shopping-category">
-            <li>
-              <a href="index.html">Kids' Wears</a>
-            </li>
-            <li>
-              <a href="index.html">Ladies' Wears</a>
-            </li>
-            <li>
-              <a href="index.html">Men's Wears</a>
-            </li>
-          </ul>
-          {signedIn && (
-            <div className="signout">
-              <Link to="signout">Logout</Link>
-            </div>
-          )}
-        </aside>
-        <main className="main">
+        <Header onToggleMenu={toggleMenu} onCloseMenu={closeMenu} />
+        <main className="main" onClick={closeMenu}>
           <div className="products">
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/welcome" element={<WelcomePage />} />
+              <Route path="/profile/:userId" element={<ProfilePage />} />
+              <Route
+                path="/profile/change-password"
+                element={<ChangePasswordPage />}
+              />
               <Route path="/create_product" element={<CreateProduct />} />
               <Route path="/signin" element={<SignInPage />} />
+              <Route path="/logout" element={<LogoutPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route
                 path="/products/:productId"
                 element={<ProductPage onAddItem={AddToCartHandler} />}
               />
+              <Route path="/product-reviews/:productId" element={<ReviewsPage />} />
             </Routes>
           </div>
         </main>

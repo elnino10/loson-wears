@@ -4,7 +4,8 @@ import axios from "axios";
 
 const initialState = {
   product: {},
-  loading: true,
+  success: false,
+  loading: false,
   error: null,
 };
 
@@ -13,9 +14,11 @@ const productDetailSlice = createSlice({
   initialState,
   reducers: {
     productDetailtRequest(state, action) {
-      state.loading = false;
+      state.loading = true;
+      state.product = action.payload 
     },
     productDetailSuccess(state, action) {
+      state.success = true;
       state.product = action.payload;
     },
     productDetailFail(state, action) {
@@ -33,11 +36,12 @@ export const {
 export const productDetailAsync = (productId) => async (dispatch) => {
   try {
     dispatch(productDetailtRequest(productId));
-    const { data } = await axios.get("/api/items/" + productId);
-    dispatch(productDetailSuccess(data));
+    const { data } = await axios.get(`/api/products/${productId}`);
+    const product = data.data.product
+    if(product) dispatch(productDetailSuccess(product));
   } catch (error) {
     dispatch(productDetailFail(error.message));
   }
-};
+}; 
 
 export default productDetailSlice.reducer;

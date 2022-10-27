@@ -1,32 +1,24 @@
-import express from "express";
-import Product from "../models/productModel";
+import express from "express"; 
+import reviewRoute from "./reviewRoute.js";
+import {
+  createProduct,
+  deleteProduct,
+  getAllProducts,
+  getProduct,
+  updateProduct,
+} from "../controllers/productController.js";
+import { restrictTo, secureLogin } from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const products = await Product.find({});
-  res.send(products);
-});
+router.use("/:productId/reviews", reviewRoute);
 
-router.post("/", async (req, res) => {
-  const product = new Product({
-    name: req.body.name,
-    price: req.body.price,
-    image: req.body.image,
-    brand: req.body.brand,
-    category: req.body.category,
-    reviews: req.body.reviews,
-    description: req.body.description,
-    rating: req.body.rating,
-    qtyInStock: req.body.qtyInStock,
-  });
-  const newProduct = await product.save();
-  if (newProduct) {
-    return res
-      .status(201)
-      .send({ message: "New Product Created", data: newProduct });
-  }
-  return res.status(500).send({ message: "Create Product Failed" });
-});
+router.get("/", getAllProducts);
+router.post("/create-product", secureLogin, restrictTo("admin"), createProduct);
+router
+  .route("/:id")
+  .get(getProduct)
+  .patch(secureLogin, restrictTo("admin"), updateProduct)
+  .delete(secureLogin, restrictTo("admin"), deleteProduct);
 
 export default router;

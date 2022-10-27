@@ -22,7 +22,7 @@ export const createProduct = (product) => async (dispatch, getState) => {
   try {
     dispatch(createProductRequest(product));
     const {
-      userSignIn: { userInfo },
+      userSignin: { userInfo },
     } = getState();
     const {data} = await axios.post("/api/items", product, {
       headers: {

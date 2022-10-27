@@ -1,47 +1,37 @@
-import express from "express";
-import data from "./data";
+/* eslint-disable no-undef */
+import app from './app.js';
 import dotenv from "dotenv";
-import config from "./config";
-import mongoose from "mongoose";
-import bodyParser from "body-parser";
-import userRoute from "./routes/userRoute";
-import productRoute from "./routes/productRoute";
+import config from "./config.js";
+import mongoose from "mongoose"; 
 
+process.on("uncaughtException", (err) => {
+  console.log("Error! Shutting down..");
+  console.log(err.name, err.message);
+  process.exit(1);
+});
+ 
 dotenv.config();
 
-const mongodbUrl = config.MONGODB_URL;
-console.log(config.MONGODB_URL);
+const mongodbUrl = config.MONGODB_URL.replace('<password>', config.DATABASE_PASSWORD);
 mongoose
   .connect(mongodbUrl, {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("db connected.....");
-  })
-  .catch((err) => {
-    console.log(err);
+    console.log("db connected...");
   });
 
-const app = express();
-app.use(bodyParser.json());
-app.use("/api/users", userRoute);
-app.use("/api/create_product", productRoute);
+const port = config.SERVER_PORT
 
-const { items } = data;
-app.get("/api/items/:id", (req, res) => {
-  const itemId = req.params["id"];
-  const item = items.find((item) => item.id === itemId);
-  if (item) {
-    res.send(item);
-  } else {
-    res.status(404).send({ msg: "Product not found!" });
-  }
+const server = app.listen(port, () => {
+  console.log(`server started at port ${port}...`);
 });
 
-app.get("/api/items", (req, res) => {
-  res.send(items);
-});
-
-app.listen(5000, () => {
-  console.log("server started at port 5000");
+process.on("unhandledRejection", (err) => {
+  console.log("Error! Shutting down...");
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
 });

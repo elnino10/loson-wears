@@ -1,16 +1,18 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import LoadingIndicator from "../components/UI/LoadingIndicator";
+import { addToCart } from "../store/cartSlice";
 import { productDetailAsync } from "../store/productDetailSlice";
 
-const ProductsPage = (props) => {
+const ProductsPage = () => {
+  const { product, loading, error } = useSelector(
+    (state) => state.productDetail
+  );
+  const params = useParams()
+  const dispatch = useDispatch()
   const qtyRef = useRef();
-  const params = useParams();
-  const item = useSelector((state) => state.productDetail.product);
-  const loading = useSelector((state) => state.productDetail.loading);
-  const error = useSelector((state) => state.productDetail.error);
   const picked = useSelector((state) => state.cart.itemPicked);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(productDetailAsync(params.productId));
@@ -19,76 +21,74 @@ const ProductsPage = (props) => {
 
   const AddToCartHandler = () => {
     const itemQuantity = qtyRef.current.value;
-    props.onAddItem({
-      name: item.name,
-      id: item.id,
-      price: item.price,
+    dispatch(addToCart({
+      name: product.name,
+      id: product.id,
+      price: product.price,
       quantity: itemQuantity,
-    });
+    }))
   };
+
+  let content = (
+    <div className="details">
+      <div className="details-image">
+        <img src={product.image} alt="product" />
+      </div>
+      <div className="details-info">
+        <ul>
+          <li>
+            <h4>{product.name}</h4>
+          </li>
+          <li>
+            {product.ratingsAverage} stars ({product.ratingsQuantity} Reviews) <Link to={`/product-reviews/${product.id}`}>see reviews...</Link>
+          </li>
+          <li>
+            Price: <b>{product.price}</b> ngn
+          </li>
+          <li>
+            Description:
+            <div>{product.description}</div>
+          </li>
+        </ul>
+      </div>
+      <div className="details-action">
+        <ul>
+          <li>Price: {product.price} ngn</li>
+          <li>Status: {product.qtyInStock > 0 ? "In Stock" : "Unavailable"}</li>
+          <li>
+            Qty:{" "}
+            <select ref={qtyRef} disabled={picked ? true : false}>
+              {[...Array(product.qtyInStock).keys()].map((x) => (
+                <option key={product.id + `q${x + 1}`} value={x + 1}>
+                  {x + 1}
+                </option>
+              ))}
+            </select>
+          </li>
+          {!picked ? (
+            <li>
+              {product.qtyInStock > 0 && (
+                <button className="button" onClick={AddToCartHandler}>
+                  Add to Cart
+                </button>
+              )}
+            </li>
+          ) : (
+            <p>{product.name} Added To Cart!</p>
+          )}
+        </ul>
+      </div>
+    </div>
+  );
+  if (loading && !product) content = <LoadingIndicator />;
+  if (error) content = <p>{error.message}</p>;
 
   return (
     <div>
       <div className="go-back">
         <Link to="/">Go back</Link>
       </div>
-      {loading ? (
-        <div>Loading...</div>
-      ) : error ? (
-        <div>{error}</div>
-      ) : (
-        <div className="details">
-          <div className="details-image">
-            <img src={item.image} alt="product" />
-          </div>
-          <div className="details-info">
-            <ul>
-              <li>
-                <h4>{item.name}</h4>
-              </li>
-              <li>
-                {item.rating} stars ({item.reviews} Reviews)
-              </li>
-              <li>
-                Price: <b>{item.price}</b> ngn
-              </li>
-              <li>
-                Description
-                <div>{item.description}</div>
-              </li>
-            </ul>
-          </div>
-          <div className="details-action">
-            <ul>
-              <li>Price: {item.price} ngn</li>
-              <li>
-                Status: {item.qtyInStock > 0 ? "In Stock" : "Unavailable"}
-              </li>
-              <li>
-                Qty:{" "}
-                <select ref={qtyRef} disabled={picked ? true : false}>
-                  {[...Array(item.qtyInStock).keys()].map((x) => (
-                    <option key={item.id + `q${x + 1}`} value={x + 1}>
-                      {x + 1}
-                    </option>
-                  ))}
-                </select>
-              </li>
-              {!picked ? (
-                <li>
-                  {item.qtyInStock > 0 && (
-                    <button className="button" onClick={AddToCartHandler}>
-                      Add to Cart
-                    </button>
-                  )}
-                </li>
-              ) : (
-                <p>{item.name} Added To Cart!</p>
-              )}
-            </ul>
-          </div>
-        </div>
-      )}
+      {content}
     </div>
   );
 };

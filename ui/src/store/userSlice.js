@@ -5,38 +5,70 @@ import Cookie from "js-cookie";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    userInfo: {email: null, password: null},
+    userInfo: {},
     loading: false,
-    success: false,
+    isAuth: false,
     error: null,
   },
   reducers: {
-    signinRequest(state) {
+    request(state, action) {
       state.loading = true;
+      state.userInfo.email = action.payload.email;
+      state.userInfo.password = action.payload.password;
     },
 
-    signinSuccess(state, action) {
-      state.userInfo = action.payload;
-      state.success = true;
+    success(state, action) {
+      state.isAuth = true;
+      state.userInfo = action.payload
     },
 
-    signinFail(state, action) {
+    fail(state, action) {
       state.error = action.payload;
     },
   },
 });
 
-export const signin = (email, password) => async (dispatch) => {
-  dispatch(signinRequest(email, password));
+export const signup = (name, email, password, passwordConfirm) => async (dispatch) => {
+  dispatch(request(name, email, password, passwordConfirm));
   try {
-    const { data } = await axios.post("/api/users/signin", { email, password });
-    dispatch(signinSuccess(data));
-    Cookie.set("userInfo", JSON.stringify(data));
+      const { data } = await axios.post(
+        "/api/users/signup", { name, email, password, passwordConfirm });
+      const {user} = data.data  
+        console.log(user);
+      dispatch(success(user));
   } catch (error) {
-    dispatch(signinFail(error.message));
+      dispatch(fail(error.message))
+  }
+  
+}
+
+export const signin = (email, password) => async (dispatch) => {
+  dispatch(request(email, password));
+  try {
+    const { data } = await axios.post("/api/users/login", { email, password });
+    const { user } = data.data;
+    console.log(user);
+    dispatch(success(user));
+  } catch (error) {
+    console.log(error);
+    let errorMsg = error.message.slice(0, 15).trim();
+    dispatch(fail(errorMsg));
   }
 };
 
-export const { signinRequest, signinSuccess, signinFail } = userSlice.actions;
+export const logout = () => async (dispatch) => {
+  try {
+    await axios.get(`/api/users/logout`);
+    dispatch(success({}))
+  } catch (error) {
+    dispatch(fail(error.message))
+  }
+};
+
+export const {
+  request,
+  success,
+  fail,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,64 +1,37 @@
 import express from "express";
-import User from "../models/userModel";
-import { getToken } from "../utils";
+import {
+  getAllUsers,
+  updateUser,
+  getUser,
+  deleteUser,
+} from "../controllers/userController.js";
+import {
+  createAdmin,
+  createUser,
+  loginUser,
+  secureLogin,
+  restrictTo,
+  updateUserPassword,
+  forgotPassword,
+  resetPassword,
+  logoutUser,
+} from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.post("/register", async (req, res) => {
-  const user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-  })
-  const newUser = await user.save();
-  res.send(newUser)
-  if (newUser) {
-    res.send({
-      _id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      isAdmin: newUser.isAdmin,
-      token: getToken(newUser),
-    });
-  } else {
-    res.status(401).send({ msg: "Failed to create an account" });
-  }
-})
+router.post("/login", loginUser);
+router.post("/signup", createUser);
+router.post("/createAdmin", createAdmin);
+router.post("/forgotPassword", forgotPassword);
+router.patch("/resetPassword/:token", resetPassword);
 
-router.post("/signin", async (req, res) => {
-  try {
-    const userSignin = await User.findOne({
-      email: req.body.email,
-      password: req.body.password,
-    });
-    if (userSignin) {
-      return res.send({
-        _id: userSignin.id,
-        name: userSignin.name,
-        email: userSignin.email,
-        isAdmin: userSignin.isAdmin,
-        token: getToken(userSignin),
-      });
-    }
-  } catch (error) {
-    res.send({message: "Invalid email or password"})
-  }
+router.use(secureLogin);
 
-})
-
-router.get("/createadmin", async (req, res) => {
-  try {
-    const user = new User({
-      name: "Joe",
-      email: "joeegboka@gmail.com",
-      password: "12345",
-      isAdmin: true,
-    });
-    const newUser = await user.save();
-    res.send(newUser);
-  } catch (error) {
-    res.send({ msg: error.message });
-  }
-});
+router.get("/", restrictTo("admin"), getAllUsers);
+router.route("/:id").get(getUser);
+router.patch("/updateUser", updateUser);
+router.patch("/updatePassword", updateUserPassword);
+router.get("/logout", logoutUser);
+router.delete("/deleteUser", deleteUser);
 
 export default router;
