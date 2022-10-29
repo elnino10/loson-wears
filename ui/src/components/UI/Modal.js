@@ -9,7 +9,7 @@ export const Backdrop = () => {
   const hideCartHandler = () => {
     dispatch(hideCart());
   };
-
+ 
   return <div className="backdrop" onClick={hideCartHandler}></div>;
 };
 

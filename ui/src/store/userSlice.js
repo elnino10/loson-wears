@@ -8,67 +8,119 @@ const userSlice = createSlice({
     userInfo: {},
     loading: false,
     isAuth: false,
+    logout: false,
     error: null,
+    authError: false,
   },
   reducers: {
-    request(state, action) {
+    request(state) {
       state.loading = true;
-      state.userInfo.email = action.payload.email;
-      state.userInfo.password = action.payload.password;
     },
 
     success(state, action) {
       state.isAuth = true;
-      state.userInfo = action.payload
+      state.userInfo = action.payload;
     },
 
     fail(state, action) {
       state.error = action.payload;
     },
+
+    logoutUser(state){
+      state.logout = true
+    },
+
+    hideErrorModal(state) {
+      state.authError = false;
+    },
+
+    showErrorModal(state) {
+      state.authError = true;
+    },
   },
 });
 
-export const signup = (name, email, password, passwordConfirm) => async (dispatch) => {
-  dispatch(request(name, email, password, passwordConfirm));
-  try {
-      const { data } = await axios.post(
-        "/api/users/signup", { name, email, password, passwordConfirm });
-      const {user} = data.data  
-        console.log(user);
-      dispatch(success(user));
-  } catch (error) {
-      dispatch(fail(error.message))
-  }
-  
-}
+export const signup =
+  (name, email, password, passwordConfirm) => async (dispatch) => {
+    try {
+      dispatch(request());
+      const { data } = await axios.post("/api/users/signup", {
+        name,
+        email,
+        password,
+        passwordConfirm,
+      });
+      const { user } = data.data;
+      if (user) dispatch(success(user));
+      // Cookie.set("jwt", JSON.stringify(data), { expires: 3 });
+    } catch (error) {
+      const data = error.response.data;
+      const message = data.message;
+      if (data.error.code === 11000) {
+        return dispatch(fail("Email already exists"));
+      }
+      const errMsg = message.split(",")[0].split(" ").slice(4).join(" ");
+      dispatch(fail(errMsg));
+    }
+  };
 
 export const signin = (email, password) => async (dispatch) => {
-  dispatch(request(email, password));
   try {
+    dispatch(request());
     const { data } = await axios.post("/api/users/login", { email, password });
     const { user } = data.data;
-    console.log(user);
-    dispatch(success(user));
+    console.log(data);
+    if (user) dispatch(success(user));
+    // Cookie.set("jwt", JSON.stringify(data), { expires: 3 });
   } catch (error) {
-    console.log(error);
-    let errorMsg = error.message.slice(0, 15).trim();
-    dispatch(fail(errorMsg));
+    const { message } = error.response.data;
+    dispatch(fail(message));
   }
 };
 
-export const logout = () => async (dispatch) => {
+export const userDetailAsync = (userId) => async (dispatch) => {
   try {
-    await axios.get(`/api/users/logout`);
-    dispatch(success({}))
+    dispatch(request());
+    const { data } = await axios.get(
+      `http://127.0.0.1:5000/api/users/${userId}`
+    );
+    if (data) dispatch(success(data));
   } catch (error) {
-    dispatch(fail(error.message))
+    console.log(error.response.data);
+    const { message } = error.response.data;
+    dispatch(fail(message));
+    dispatch(showErrorModal());
   }
 };
 
-export const {
-  request,
-  success,
-  fail,
-} = userSlice.actions;
+export const updateUserInfoAsync = (name, email) => async (dispatch) => {
+  try {
+    dispatch(request());
+    const { data } = await axios.patch(
+      "http://127.0.0.1:5000/api/users/updateUser",
+      { name, email }
+    );
+    console.log(data);
+  } catch (error) {
+    console.log(error.response.data);
+  }
+};
+
+export const logoutAsync = () => async (dispatch) => {
+  try {
+    dispatch(request())
+    const data = await axios.get("http://127.0.0.1:5000/api/users/logout");
+    dispatch(logoutUser())
+    console.log(data);
+  } catch (error) {
+    const { message } = error.response.data;
+    console.log(message);
+    dispatch(fail(message));
+    dispatch(showErrorModal())
+  }
+};
+
+export const { request, success, fail, logoutUser, showErrorModal, hideErrorModal } =
+  userSlice.actions;
 
 export default userSlice.reducer;

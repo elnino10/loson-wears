@@ -24,6 +24,7 @@ router.post("/signup", createUser);
 router.post("/createAdmin", createAdmin);
 router.post("/forgotPassword", forgotPassword);
 router.patch("/resetPassword/:token", resetPassword);
+router.get("/logout", logoutUser);
 
 router.use(secureLogin);
 
@@ -31,7 +32,6 @@ router.get("/", restrictTo("admin"), getAllUsers);
 router.route("/:id").get(getUser);
 router.patch("/updateUser", updateUser);
 router.patch("/updatePassword", updateUserPassword);
-router.get("/logout", logoutUser);
 router.delete("/deleteUser", deleteUser);
 
 export default router;

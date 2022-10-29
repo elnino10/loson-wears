@@ -9,6 +9,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isValid, setIsValid] = useState(false);
   const { isAuth, error, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,50 +21,64 @@ const RegisterPage = () => {
     return () => {};
   }, [isAuth, navigate]);
 
+  useEffect(() => {
+    setIsValid(true);
+  }, []);
+
   const nameHandler = (e) => {
     setName(e.target.value);
+    setIsValid(true);
   };
   const emailHandler = (e) => {
     setEmail(e.target.value);
+    setIsValid(true);
   };
 
   const passwordHandler = (e) => {
     setPassword(e.target.value);
+    setIsValid(true);
   };
 
   const passwordConfirmHandler = (e) => {
     setPasswordConfirm(e.target.value);
+    setIsValid(true);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
+    setIsValid(true);
     dispatch(signup(name, email, password, passwordConfirm));
-    setName("");
-    setEmail("");
-    setPassword("");
-    setPasswordConfirm("");
+
+    setIsValid(false);
+    // setName("");
+    // setEmail("");
+    // setPassword("");
+    // setPasswordConfirm("");
   };
 
-  let link = <Link to={-1}>Go back</Link>;
-  if (loading && isAuth) {
+  let link = <Link to={-1}>go back</Link>;
+  if (loading && !error) {
     link = <LoadingIndicator />;
   }
-
   return (
     <>
-      <div className="go-back">
-        <Link to={-1}>{link}</Link>
-      </div>
+      <div className="go-back">{link}</div>
       <div className="form">
         <form className="form-container" onSubmit={submitHandler}>
           <ul>
             <li>
               <h3>Create Account</h3>
             </li>
-            <li>{error && <div>{error}</div>}</li>
+            <li className="error">{!isValid && <div>{error}</div>}</li>
             <li>
               <label htmlFor="name">Name</label>
-              <input id="name" type="name" name="name" onChange={nameHandler} />
+              <input
+                id="name"
+                type="name"
+                name="name"
+                onChange={nameHandler}
+                value={name}
+              />
             </li>
             <li>
               <label htmlFor="email">Email</label>
@@ -72,6 +87,7 @@ const RegisterPage = () => {
                 type="email"
                 name="email"
                 onChange={emailHandler}
+                value={email}
               />
             </li>
             <li>
@@ -81,6 +97,7 @@ const RegisterPage = () => {
                 type="password"
                 name="password"
                 onChange={passwordHandler}
+                value={password}
               />
             </li>
             <li>
@@ -90,6 +107,7 @@ const RegisterPage = () => {
                 type="password"
                 name="passwordConfirm"
                 onChange={passwordConfirmHandler}
+                value={passwordConfirm}
               />
             </li>
             <li>

@@ -1,32 +1,29 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../store/userSlice";
+import LoadingIndicator from "../components/UI/LoadingIndicator";
+import { logoutAsync } from "../store/userSlice";
 
 const Logout = () => {
-  const loggedOut = useSelector((state) => state.user.success);
+  const { logout, loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const logoutHandler = () => {
-    dispatch(logout());
-  };
-
-  useEffect(() => {
-    if (loggedOut) {
-      navigate("/");
-    }
-  }, [loggedOut, navigate]);
-
-  const cancelLogoutHandler = () => {
-    navigate(-1);
+  const logoutHandler = (e) => {
+    e.preventDefault();
+    dispatch(logoutAsync());
+    if (logout) navigate("/");
   };
 
   return (
     <>
-      <div className="go-back"></div>
+      {
+        <div className="go-back">
+          {loading && logout && <LoadingIndicator />}
+        </div>
+      }
       <div className="form">
-        <form className="form-container">
+        <form className="form-container" onSubmit={logoutHandler}>
           <div className="logout-header">
             <h3>Logging out</h3>
             <p className="error">Do you want to logout from this account?</p>
@@ -34,18 +31,14 @@ const Logout = () => {
 
           <ul className="logout-button">
             <li>
-              <button type="submit" className="button" onClick={logoutHandler}>
+              <button type="submit" className="button">
                 Yes
               </button>
             </li>
             <li>
-              <button
-                type="submit"
-                className="button-cancel button"
-                onClick={cancelLogoutHandler}
-              >
+              <Link to={-1} className="button-cancel button">
                 Cancel
-              </button>
+              </Link>
             </li>
           </ul>
         </form>

@@ -13,6 +13,6 @@ export default configureStore({
     productReviews: productReviewReducer,
     cart: cartReducer,
     user: userReducer,
-    createProduct: createProductReducer
+    createProduct: createProductReducer,
   },
 });

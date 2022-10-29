@@ -1,11 +1,12 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import CartButton from "./Cart/CartButton"
-const Header  = (props) => {
+import CartButton from "./Cart/CartButton";
+const Header = (props) => {
   const signedIn = useSelector((state) => state.user.isAuth);
-  const userInfo = useSelector((state) => state.user.userInfo);
+  const { userInfo } = useSelector((state) => state.user);
 
+  
   const name = `${userInfo.name}`;
   const userName = name.charAt(0).toUpperCase() + name.slice(1);
 
@@ -19,7 +20,7 @@ const Header  = (props) => {
         <div className="header-links">
           {signedIn ? (
             <NavLink
-              to={`/profile/${userInfo.id}`}
+              to={`/my-profile/${userInfo._id}`}
               className={({ isActive }) => (isActive ? "active" : "")}
             >
               {`Welcome ${userName}`}

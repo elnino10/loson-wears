@@ -37,7 +37,7 @@ export const createUser = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm,
   });
- 
+
   if (!newUser) {
     return next(new AppError("Failed to create user!", 404));
   }
@@ -58,7 +58,7 @@ export const loginUser = catchAsync(async (req, res, next) => {
     !userSignin ||
     !(await userSignin.checkPassword(password, userSignin.password))
   ) {
-    return next(new AppError("Incorrect email or password!", 401));
+    return next(new AppError("Incorrect email or password!", 400));
   }
   createToken(userSignin, 201, res);
 });
@@ -93,12 +93,14 @@ export const secureLogin = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
-    return next(new AppError("Unauthorized. Please log in to access...", 401));
+    return next(new AppError("Unauthorized!. Please log in to access...", 401));
   }
- 
+
   const decoded = await promisify(jwt.verify)(token, config.JWT_SECRET);
 
   const verifiedUser = await User.findById(decoded.id);

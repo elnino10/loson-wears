@@ -9,8 +9,8 @@ const ProductsPage = () => {
   const { product, loading, error } = useSelector(
     (state) => state.productDetail
   );
-  const params = useParams()
-  const dispatch = useDispatch()
+  const params = useParams();
+  const dispatch = useDispatch();
   const qtyRef = useRef();
   const picked = useSelector((state) => state.cart.itemPicked);
 
@@ -21,12 +21,14 @@ const ProductsPage = () => {
 
   const AddToCartHandler = () => {
     const itemQuantity = qtyRef.current.value;
-    dispatch(addToCart({
-      name: product.name,
-      id: product.id,
-      price: product.price,
-      quantity: itemQuantity,
-    }))
+    dispatch(
+      addToCart({
+        name: product.name,
+        id: product.id,
+        price: product.price,
+        quantity: itemQuantity,
+      })
+    );
   };
 
   let content = (
@@ -40,7 +42,8 @@ const ProductsPage = () => {
             <h4>{product.name}</h4>
           </li>
           <li>
-            {product.ratingsAverage} stars ({product.ratingsQuantity} Reviews) <Link to={`/product-reviews/${product.id}`}>see reviews...</Link>
+            {product.ratingsAverage} stars ({product.ratingsQuantity} Reviews){" "}
+            <Link to={`/product-reviews/${product.id}`}>see reviews...</Link>
           </li>
           <li>
             Price: <b>{product.price}</b> ngn
@@ -86,7 +89,7 @@ const ProductsPage = () => {
   return (
     <div>
       <div className="go-back">
-        <Link to="/">Go back</Link>
+        <Link to="/">go back</Link>
       </div>
       {content}
     </div>

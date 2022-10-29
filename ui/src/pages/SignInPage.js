@@ -7,34 +7,44 @@ import { signin } from "../store/userSlice";
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [isValid, setIsValid] = useState(false);
   const { isAuth, error, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuth) {
+      setIsValid(true);
       navigate("/");
     }
     return () => {};
   }, [isAuth, navigate]);
 
+  useEffect(() => {
+    setIsValid(true);
+  }, []);
+
   const emailHandler = (e) => {
     setEmail(e.target.value);
+    setIsValid(true);
   };
 
   const passwordHandler = (e) => {
     setPassword(e.target.value);
+    setIsValid(true);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-
     dispatch(signin(email, password));
+
+    setIsValid(false);
     setEmail("");
     setPassword("");
   };
 
-  let link = <Link to={-1}>Go back</Link>;
+  let link = <Link to={-1}>go back</Link>;
   if (loading && !error) {
     link = <LoadingIndicator />;
   }
@@ -48,15 +58,16 @@ const SignInPage = () => {
             <li>
               <h3>Sign In</h3>
             </li>
-
-            <li className="error">{error && <div>{error}</div>}</li>
+            {!isValid && <li className="error">{error}</li>}
             <li>
               <label htmlFor="email">Email</label>
               <input
                 id="email"
                 type="email"
                 name="email"
+                placeholder="you@example.com"
                 onChange={emailHandler}
+                value={email}
               />
             </li>
             <li>
@@ -66,6 +77,7 @@ const SignInPage = () => {
                 type="password"
                 name="password"
                 onChange={passwordHandler}
+                value={password}
               />
             </li>
             <li>

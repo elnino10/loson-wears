@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
@@ -14,10 +14,15 @@ import WelcomePage from "./pages/WelcomePage";
 import ProfilePage from "./pages/ProfilePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ReviewsPage from "./pages/ReviewsPage";
+import ErrorModal from "./components/UI/ErrorModal";
+import { hideErrorModal } from "./store/userSlice";
+import Cookie from 'js-cookie';
 
 function App() {
   const viewCart = useSelector((state) => state.cart.cartIsVisible);
+  const { error, authError } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const AddToCartHandler = (item) => {
     dispatch(addToCart(item));
@@ -36,9 +41,15 @@ function App() {
     toggled = false;
   };
 
+  const hideErrorHandler = () => {
+    dispatch(hideErrorModal())
+    navigate('/')
+  };
+
   return (
     <>
       {viewCart && <Cart />}
+      {authError && <ErrorModal children={error} onClose={hideErrorHandler} />}
       <div className="container-grid">
         <Header onToggleMenu={toggleMenu} onCloseMenu={closeMenu} />
         <main className="main" onClick={closeMenu}>
@@ -46,9 +57,9 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/welcome" element={<WelcomePage />} />
-              <Route path="/profile/:userId" element={<ProfilePage />} />
+              <Route path="/my-profile/:userId" element={<ProfilePage />} />
               <Route
-                path="/profile/change-password"
+                path="/my-profile/change-password"
                 element={<ChangePasswordPage />}
               />
               <Route path="/create_product" element={<CreateProduct />} />
@@ -59,7 +70,10 @@ function App() {
                 path="/products/:productId"
                 element={<ProductPage onAddItem={AddToCartHandler} />}
               />
-              <Route path="/product-reviews/:productId" element={<ReviewsPage />} />
+              <Route
+                path="/product-reviews/:productId"
+                element={<ReviewsPage />}
+              />
             </Routes>
           </div>
         </main>

@@ -26,7 +26,7 @@ const errorDev = (err, res) => {
     message: err.message,
     stack: err.stack, 
   });
-};
+}; 
 
 const errorProd = (err, res) => {
   if (err.isOperational) {

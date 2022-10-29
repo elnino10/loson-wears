@@ -21,7 +21,7 @@ mongoose
   });
 
 //   READ JSON FILE
-const products = fs.readFileSync('./backend/dev-data/productData.js', 'utf-8');
+const products = JSON.parse(fs.readFileSync('./backend/dev-data/productData.json', 'utf-8'));
 // const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
 // const reviews = JSON.parse(fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8'));
 

@@ -15,15 +15,14 @@ const ReviewsPage = () => {
 
   useEffect(() => {
     dispatch(productReviewsAsync(params.productId));
-    dispatch(productDetailAsync(params.productId))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-//   useEffect(() => {
-//     dispatch(productDetailAsync(params.productId));
-//   }, [dispatch, params.productId]);
+  useEffect(() => {
+    dispatch(productDetailAsync(params.productId));
+  }, [dispatch, params.productId]);
 
-  console.log(reviews);
+  console.log(reviews, 'reviews??????????????');
 
   let content = (
     <div className="details">
@@ -33,11 +32,11 @@ const ReviewsPage = () => {
       <div className="details-info">
         <h4>Reviews for {product.name}</h4>
         <ul>
-          {/* {reviews.map((review) => (
+          {/* {reviews && reviews.map((review) => (
             <li key={review.id}>
               <div>{review.review}</div>
               <div>rating: {review.rating}</div>
-              <div>review by: {review.user.name}</div>
+              <div>review by: {review.user && review.user.name}</div>
             </li>
           ))} */}
         </ul>
@@ -51,7 +50,7 @@ const ReviewsPage = () => {
   return (
     <div>
       <div className="go-back">
-        <Link to={-1}>Go back</Link>
+        <Link to={-1}>go back</Link>
       </div>
       {content}
     </div>
