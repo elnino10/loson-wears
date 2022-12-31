@@ -16,7 +16,6 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import ReviewsPage from "./pages/ReviewsPage";
 import ErrorModal from "./components/UI/ErrorModal";
 import { hideErrorModal } from "./store/userSlice";
-import Cookie from 'js-cookie';
 
 function App() {
   const viewCart = useSelector((state) => state.cart.cartIsVisible);

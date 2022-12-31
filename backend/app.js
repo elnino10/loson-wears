@@ -19,10 +19,10 @@ app.use(cookieParser())
 app.use(cors());
 
 // Test middleware
-app.use((req, res, next)=>{
-  console.log(req.cookies);
-  next()
-})
+// app.use((req, res, next)=>{
+//   console.log(req.cookies);
+//   next()
+// })
 
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
