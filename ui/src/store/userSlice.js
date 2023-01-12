@@ -40,11 +40,13 @@ const userSlice = createSlice({
   },
 });
 
+const baseURL = "http://127.0.0.1:5000"
+
 export const signup =
   (name, email, password, passwordConfirm) => async (dispatch) => {
     try {
       dispatch(request());
-      const { data } = await axios.post("/api/users/signup", {
+      const { data } = await axios.post(`${baseURL}/api/users/signup`, {
         name,
         email,
         password,
@@ -52,7 +54,7 @@ export const signup =
       });
       const { user } = data.data;
       if (user) dispatch(success(user));
-      // Cookie.set("jwt", JSON.stringify(data), { expires: 3 });
+      Cookie.set("jwt", JSON.stringify(data), { expires: 3 });
     } catch (error) {
       const data = error.response.data;
       const message = data.message;
@@ -67,11 +69,11 @@ export const signup =
 export const signin = (email, password) => async (dispatch) => {
   try {
     dispatch(request());
-    const { data } = await axios.post("/api/users/login", { email, password });
+    const { data } = await axios.post(`${baseURL}/api/users/login`, { email, password });
     const { user } = data.data;
     console.log(data);
     if (user) dispatch(success(user));
-    // Cookie.set("jwt", JSON.stringify(data), { expires: 3 });
+    Cookie.set("jwt", JSON.stringify(data), { expires: 3 });
   } catch (error) {
     const { message } = error.response.data;
     dispatch(fail(message));
@@ -82,8 +84,8 @@ export const userDetailAsync = (userId) => async (dispatch) => {
   try {
     dispatch(request());
     const { data } = await axios.get(
-      `http://127.0.0.1:5000/api/users/${userId}`
-    );
+      `${baseURL}/api/users/${userId}`
+    ); 
     if (data) dispatch(success(data));
   } catch (error) {
     console.log(error.response.data);
@@ -97,7 +99,7 @@ export const updateUserInfoAsync = (name, email) => async (dispatch) => {
   try {
     dispatch(request());
     const { data } = await axios.patch(
-      "http://127.0.0.1:5000/api/users/updateUser",
+      `${baseURL}/api/users/updateUser`,
       { name, email }
     );
     console.log(data);
@@ -109,7 +111,7 @@ export const updateUserInfoAsync = (name, email) => async (dispatch) => {
 export const logoutAsync = () => async (dispatch) => {
   try {
     dispatch(request())
-    const data = await axios.get("http://127.0.0.1:5000/api/users/logout");
+    const data = await axios.get(`${baseURL}/api/users/logout`);
     dispatch(logoutUser())
     console.log(data);
   } catch (error) {

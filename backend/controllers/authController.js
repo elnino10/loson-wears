@@ -52,7 +52,7 @@ export const loginUser = catchAsync(async (req, res, next) => {
   }
   const userSignin = await User.findOne({ email }).select("+password");
 
-  // if(!userSignin.active) return next(new AppError('User no longer exists!', 404));
+  if(!userSignin.active) return next(new AppError('User no longer exists!', 404));
 
   if (
     !userSignin ||

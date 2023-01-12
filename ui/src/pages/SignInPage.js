@@ -8,38 +8,29 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [isValid, setIsValid] = useState(false);
   const { isAuth, error, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuth) {
-      setIsValid(true);
       navigate("/");
     }
     return () => {};
   }, [isAuth, navigate]);
 
-  useEffect(() => {
-    setIsValid(true);
-  }, []);
-
   const emailHandler = (e) => {
     setEmail(e.target.value);
-    setIsValid(true);
   };
 
   const passwordHandler = (e) => {
     setPassword(e.target.value);
-    setIsValid(true);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(signin(email, password));
 
-    setIsValid(false);
     setEmail("");
     setPassword("");
   };
@@ -58,7 +49,7 @@ const SignInPage = () => {
             <li>
               <h3>Sign In</h3>
             </li>
-            {!isValid && <li className="error">{error}</li>}
+            {!isAuth && <li className="error">{error}</li>}
             <li>
               <label htmlFor="email">Email</label>
               <input
